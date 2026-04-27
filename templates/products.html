@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 style="margin-bottom:20px;">Products</h1>
+
+<!-- PRODUCT 1 -->
+<div class="product-row">
+
+    <!-- LEFT -->
+    <div class="product-left card">
+        <img src="{{ url_for('static', filename='images/temp.jpg') }}">
+
+        <h2>₹500</h2>
+
+        <button onclick="payNow(500)">Buy Now</button>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="product-right">
+
+        <h2>Temperature Sensor</h2>
+
+        <p class="desc">
+            Monitor environmental temperature in real-time with high precision.
+            Designed for industrial safety and continuous monitoring.
+        </p>
+
+        <div class="features">
+            <div>✔ Real-time monitoring</div>
+            <div>✔ High accuracy sensor</div>
+            <div>✔ Easy integration</div>
+            <div>✔ Durable hardware</div>
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<!-- PRODUCT 2 -->
+<div class="product-row">
+
+    <div class="product-left card">
+        <img src="{{ url_for('static', filename='images/electric.jpg') }}">
+        <h2>₹1200</h2>
+        <button onclick="payNow(1200)">Buy Now</button>
+    </div>
+
+    <div class="product-right">
+
+        <h2>Electrical Monitoring Kit</h2>
+
+        <p class="desc">
+            Detect voltage fluctuations and prevent electrical hazards in real-time.
+        </p>
+
+        <div class="features">
+            <div>✔ Voltage detection</div>
+            <div>✔ Shock prevention</div>
+            <div>✔ Smart alerts</div>
+            <div>✔ Industrial grade</div>
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<!-- PRODUCT 3 -->
+<div class="product-row">
+
+    <div class="product-left card">
+        <img src="{{ url_for('static', filename='images/ai.jpg') }}">
+        <h2>₹2000</h2>
+        <button onclick="payNow(2000)">Buy Now</button>
+    </div>
+
+    <div class="product-right">
+
+        <h2>AI Monitoring Software</h2>
+
+        <p class="desc">
+            Intelligent system that analyzes data and predicts risks before they occur.
+        </p>
+
+        <div class="features">
+            <div>✔ AI-based predictions</div>
+            <div>✔ Data analytics</div>
+            <div>✔ Dashboard integration</div>
+            <div>✔ Real-time alerts</div>
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<!-- PRODUCT 4 -->
+<div class="product-row">
+
+    <div class="product-left card">
+        <img src="{{ url_for('static', filename='images/alert.jpg') }}">
+        <h2>₹1500</h2>
+        <button onclick="payNow(1500)">Buy Now</button>
+    </div>
+
+    <div class="product-right">
+
+        <h2>🚨 Alert System</h2>
+
+        <p class="desc">
+            Instant alert system that notifies users during hazardous conditions.
+        </p>
+
+        <div class="features">
+            <div>✔ Instant alerts</div>
+            <div>✔ Multi-device support</div>
+            <div>✔ Loud alarms</div>
+            <div>✔ Emergency response</div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PAYMENT -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+function payNow(amount){
+
+fetch("/create_order", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({amount:amount})
+})
+.then(res=>res.json())
+.then(order=>{
+
+var options = {
+    "key": "rzp_test_SiRwbhD3I2yE7U",
+    "amount": order.amount,
+    "currency": "INR",
+    "name": "SafeSense",
+    "order_id": order.id,
+
+    "handler": function (response){
+        fetch("/verify_payment", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify(response)
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            alert(data.status==="success" ? "✅ Payment Successful" : "❌ Failed");
+        });
+    }
+};
+
+new Razorpay(options).open();
+
+});
+}
+</script>
+
+<style>
+
+/* ROW */
+.product-row {
+    display:flex;
+    gap:30px;
+    align-items:center;
+}
+
+/* LEFT */
+.product-left {
+    width:280px;
+    text-align:center;
+}
+
+.product-left img {
+    width:100%;
+    height:160px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+/* RIGHT */
+.product-right {
+    flex:1;
+}
+
+/* DESC */
+.desc {
+    color:#555;
+    margin:10px 0;
+}
+
+/* FEATURES */
+.features div {
+    margin:5px 0;
+}
+
+/* BUTTON */
+button {
+    margin-top:10px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .product-row {
+        flex-direction:column;
+    }
+    .product-left {
+        width:100%;
+    }
+}
+
+</style>
+
+{% endblock %}

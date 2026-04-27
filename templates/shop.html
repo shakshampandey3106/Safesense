@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>🛍 Shop</h1>
+
+<div class="grid">
+
+<!-- PRODUCT 1 -->
+<div class="card">
+    <div class="img-box">
+        <img src="{{ url_for('static', filename='images/temp.jpg') }}">
+    </div>
+    <h3>Temperature Sensor</h3>
+    <p>₹500</p>
+
+    <button onclick="addToCart('Temperature Sensor',500)">Add to Cart</button>
+    <button onclick="payNow(500)">Buy Now</button>
+</div>
+
+<!-- PRODUCT 2 -->
+<div class="card">
+    <div class="img-box">
+        <img src="{{ url_for('static', filename='images/electric.jpg') }}">
+    </div>
+    <h3>Electrical Monitoring Kit</h3>
+    <p>₹1200</p>
+
+    <button onclick="addToCart('Electrical Monitoring Kit',1200)">Add to Cart</button>
+    <button onclick="payNow(1200)">Buy Now</button>
+</div>
+
+<!-- PRODUCT 3 -->
+<div class="card">
+    <div class="img-box">
+        <img src="{{ url_for('static', filename='images/ai.jpg') }}">
+    </div>
+    <h3>AI Monitoring Software</h3>
+    <p>₹2000</p>
+
+    <button onclick="addToCart('AI Monitoring Software',2000)">Add to Cart</button>
+    <button onclick="payNow(2000)">Buy Now</button>
+</div>
+
+</div>
+
+<br>
+
+<!-- PAYMENT OPTIONS -->
+<div class="card" style="text-align:center;">
+
+<h2>Payment Options</h2>
+
+<button onclick="cod()">Cash on Delivery</button>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+// CART
+function addToCart(name, price){
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push({name, price});
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Added to cart");
+}
+
+// COD
+function cod(){
+    alert("Order placed with Cash on Delivery");
+}
+
+// RAZORPAY PAYMENT
+function payNow(amount){
+
+    fetch("/create_order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: amount })
+    })
+    .then(res => res.json())
+    .then(order => {
+
+        var options = {
+            "key": "rzp_test_SiRwbhD3I2yE7U",   // 🔥 replace this
+            "amount": order.amount,
+            "currency": "INR",
+            "name": "SafeSense AI",
+            "description": "Product Payment",
+            "order_id": order.id,
+
+            "handler": function (response){
+                alert("✅ Payment Successful");
+            },
+
+            "prefill": {
+                "name": "Customer",
+                "email": "test@gmail.com"
+            },
+
+            "theme": {
+                "color": "#2563eb"
+            }
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open();
+
+    })
+    .catch(err => {
+        alert("❌ Payment Failed");
+        console.error(err);
+    });
+}
+
+</script>
+
+{% endblock %}

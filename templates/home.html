@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+
+    <div class="hero-left">
+        <h1 class="title">
+            Industrial Safety.<br>
+            <span class="gradient">Powered by AI.</span>
+        </h1>
+
+        <p class="subtitle">
+            SafeSense AI helps industries detect hazards, predict risks,
+            and prevent accidents in real-time using intelligent analytics.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="/dashboard"><button class="primary">View Dashboard</button></a>
+            <a href="/products"><button class="secondary">Explore Products</button></a>
+        </div>
+
+        <!-- TRUST METRICS -->
+        <div class="metrics">
+            <div>
+                <h3>99%</h3>
+                <p>Accuracy</p>
+            </div>
+            <div>
+                <h3>2+</h3>
+                <p>Deployments</p>
+            </div>
+            <div>
+                <h3>24/7</h3>
+                <p>Monitoring</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hero-right">
+        <canvas id="lineChart"></canvas>
+    </div>
+
+</section>
+
+<br>
+
+<!-- FEATURES -->
+<section class="features">
+
+<div class="feature-card">
+<h3>⚡ Real-time Monitoring</h3>
+<p>Track safety data continuously with instant insights.</p>
+</div>
+
+<div class="feature-card">
+<h3>🧠 Predictive AI</h3>
+<p>Identify risks before they turn into incidents.</p>
+</div>
+
+<div class="feature-card">
+<h3>🚨 Smart Alerts</h3>
+<p>Receive alerts instantly when anomalies are detected.</p>
+</div>
+
+<div class="feature-card">
+<h3>📊 Data Analytics</h3>
+<p>Understand patterns and optimize safety strategies.</p>
+</div>
+
+</section>
+
+<br>
+
+<!-- LIVE DATA -->
+<section class="grid">
+
+<div class="card stat">
+<h3>Temperature</h3>
+<h2 id="temp">--</h2>
+</div>
+
+<div class="card stat">
+<h3>Violations</h3>
+<h2 id="violations">--</h2>
+</div>
+
+<div class="card stat">
+<h3>Risk Level</h3>
+<h2 id="risk">--</h2>
+</div>
+
+</section>
+
+<br>
+
+<!-- AI ANALYSIS -->
+<section class="card insight">
+<h3>🧠 AI Insight</h3>
+<p id="analysis">Analyzing real-time data...</p>
+</section>
+
+<br>
+
+<!-- CTA -->
+<section class="cta">
+<h2>Start building safer environments today</h2>
+<a href="/products"><button class="primary">Get Started</button></a>
+</section>
+
+<!-- CSS -->
+<style>
+
+/* HERO */
+.hero {
+    display:flex;
+    gap:40px;
+    align-items:center;
+}
+
+/* TITLE */
+.title {
+    font-size:48px;
+    font-weight:700;
+}
+
+/* GRADIENT TEXT */
+.gradient {
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* SUBTITLE */
+.subtitle {
+    color:#555;
+    margin:20px 0;
+}
+
+/* BUTTONS */
+.primary {
+    background:#2563eb;
+    color:white;
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+}
+
+.secondary {
+    background:#e5e7eb;
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+}
+
+/* METRICS */
+.metrics {
+    display:flex;
+    gap:30px;
+    margin-top:20px;
+}
+
+.metrics h3 {
+    margin:0;
+}
+
+/* FEATURES GRID */
+.features {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap:20px;
+}
+
+.feature-card {
+    padding:20px;
+    border-radius:12px;
+    background:#f8fafc;
+    transition:0.3s;
+}
+
+.feature-card:hover {
+    transform:translateY(-5px);
+}
+
+/* STATS */
+.stat {
+    text-align:center;
+}
+
+/* INSIGHT */
+.insight {
+    text-align:center;
+}
+
+/* CTA */
+.cta {
+    text-align:center;
+    padding:40px;
+    background:#f1f5f9;
+    border-radius:12px;
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+let chart;
+
+function initChart(){
+    chart = new Chart(document.getElementById("lineChart"), {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+                label: "Temperature",
+                data: []
+            }]
+        }
+    });
+}
+
+function loadData(){
+
+fetch("/data")
+.then(res=>res.json())
+.then(data=>{
+
+    temp.innerText = data.temp;
+    violations.innerText = data.violations;
+    risk.innerText = data.risk;
+
+    analysis.innerText = data.risk==="HIGH"
+        ? "⚠ High risk detected"
+        : data.risk==="MEDIUM"
+        ? "⚠ Monitor system closely"
+        : "✅ System stable";
+
+    chart.data.labels.push("");
+    chart.data.datasets[0].data.push(data.temp);
+
+    if(chart.data.labels.length > 10){
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+    }
+
+    chart.update();
+
+});
+}
+
+window.onload = ()=>{
+    initChart();
+    loadData();
+    setInterval(loadData,3000);
+};
+
+</script>
+
+{% endblock %}

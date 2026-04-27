@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>🛒 Your Cart</h1>
+
+<div class="cart-container">
+
+    <!-- ITEMS -->
+    <div id="cartItems"></div>
+
+    <!-- SUMMARY -->
+    <div class="summary card">
+
+        <h3>Order Summary</h3>
+
+        <p>Total Items: <span id="totalItems">0</span></p>
+        <p>Total Price: ₹<span id="totalPrice">0</span></p>
+
+        <br>
+
+        <a href="/checkout">
+            <button>Proceed to Checkout</button>
+        </a>
+
+    </div>
+
+</div>
+
+<style>
+
+.cart-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.cart-item {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.cart-img {
+    width: 100px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-details {
+    flex: 1;
+}
+
+.qty-btn {
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.remove {
+    color: red;
+    cursor: pointer;
+}
+
+.summary {
+    height: fit-content;
+}
+
+</style>
+
+<script>
+
+// 🔥 IMAGE MAP (IMPORTANT)
+const images = {
+    "Temperature Sensor": "{{ url_for('static', filename='images/temp.jpg') }}",
+    "Electrical Monitoring Kit": "{{ url_for('static', filename='images/electric.jpg') }}",
+    "AI Monitoring Software": "{{ url_for('static', filename='images/ai.jpg') }}"
+};
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function renderCart(){
+
+    let container = document.getElementById("cartItems");
+    container.innerHTML = "";
+
+    let total = 0;
+    let count = 0;
+
+    cart.forEach((item, index) => {
+
+        total += item.price;
+        count++;
+
+        let img = images[item.name] || images["Temperature Sensor"];
+
+        container.innerHTML += `
+        <div class="card cart-item">
+
+            <img class="cart-img" src="${img}">
+
+            <div class="cart-details">
+
+                <h3>${item.name}</h3>
+                <p>₹${item.price}</p>
+
+                <button class="qty-btn" onclick="increase(${index})">+</button>
+                <button class="qty-btn" onclick="decrease(${index})">-</button>
+
+                <br>
+
+                <span class="remove" onclick="removeItem(${index})">
+                    Remove
+                </span>
+
+            </div>
+
+        </div>
+        `;
+    });
+
+    document.getElementById("totalPrice").innerText = total;
+    document.getElementById("totalItems").innerText = count;
+}
+
+// INCREASE
+function increase(i){
+    cart.push(cart[i]);
+    saveCart();
+}
+
+// DECREASE
+function decrease(i){
+    cart.splice(i,1);
+    saveCart();
+}
+
+// REMOVE
+function removeItem(i){
+    cart.splice(i,1);
+    saveCart();
+}
+
+// SAVE
+function saveCart(){
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+}
+
+renderCart();
+
+</script>
+
+{% endblock %}

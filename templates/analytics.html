@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 style="margin-bottom:20px;">📊 Advanced Analytics</h1>
+
+<!-- FILTER BAR -->
+<div class="filter-bar card">
+
+<select id="range">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+<option>Last 90 Days</option>
+</select>
+
+<button onclick="updateData()">Apply</button>
+
+</div>
+
+<br>
+
+<!-- KPI ROW -->
+<div class="grid">
+
+<div class="card kpi">
+<h3>Total Alerts</h3>
+<h2>128</h2>
+<span class="trend up">+12%</span>
+</div>
+
+<div class="card kpi">
+<h3>Avg Temperature</h3>
+<h2>58°C</h2>
+<span class="trend down">-2%</span>
+</div>
+
+<div class="card kpi">
+<h3>System Efficiency</h3>
+<h2>92%</h2>
+<span class="trend up">+5%</span>
+</div>
+
+</div>
+
+<br>
+
+<!-- CHART GRID -->
+<div class="grid">
+
+<div class="card">
+<h3>📈 Temperature Trend</h3>
+<canvas id="lineChart"></canvas>
+</div>
+
+<div class="card">
+<h3>📊 Alerts Breakdown</h3>
+<canvas id="barChart"></canvas>
+</div>
+
+</div>
+
+<br>
+
+<div class="grid">
+
+<div class="card">
+<h3>⚠ Risk Distribution</h3>
+<canvas id="pieChart"></canvas>
+</div>
+
+<div class="card">
+<h3>📉 Efficiency Trend</h3>
+<canvas id="areaChart"></canvas>
+</div>
+
+</div>
+
+<br>
+
+<!-- TABLE -->
+<div class="card">
+
+<h3>📋 Activity Log</h3>
+
+<table class="table">
+<tr>
+<th>Time</th>
+<th>Event</th>
+<th>Severity</th>
+</tr>
+
+<tr><td>10:20</td><td>Temp Spike</td><td class="warn">Medium</td></tr>
+<tr><td>11:05</td><td>Voltage Drop</td><td class="danger">High</td></tr>
+<tr><td>12:30</td><td>Stable</td><td class="safe">Normal</td></tr>
+
+</table>
+
+</div>
+
+<br>
+
+<!-- AI REPORT -->
+<div class="card">
+
+<h3>🧠 AI Insights</h3>
+
+<p id="report">
+System shows stable performance with minor fluctuations.
+Predictive model suggests low probability of critical failure.
+</p>
+
+</div>
+
+<style>
+
+/* FILTER */
+.filter-bar {
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+/* KPI */
+.kpi {
+    position:relative;
+}
+
+.trend {
+    position:absolute;
+    top:10px;
+    right:15px;
+    font-size:12px;
+}
+
+.up { color:green; }
+.down { color:red; }
+
+/* TABLE */
+.table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+.table th, .table td {
+    padding:10px;
+    border-bottom:1px solid #eee;
+}
+
+/* STATUS */
+.safe { color:green; }
+.warn { color:orange; }
+.danger { color:red; }
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+let charts = {};
+
+function initCharts(){
+
+charts.line = new Chart(document.getElementById("lineChart"), {
+    type:"line",
+    data:{
+        labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+        datasets:[{data:[50,55,60,58,62,57,59]}]
+    }
+});
+
+charts.bar = new Chart(document.getElementById("barChart"), {
+    type:"bar",
+    data:{
+        labels:["Low","Medium","High"],
+        datasets:[{data:[60,30,10]}]
+    }
+});
+
+charts.pie = new Chart(document.getElementById("pieChart"), {
+    type:"pie",
+    data:{
+        labels:["Low","Medium","High"],
+        datasets:[{data:[50,30,20]}]
+    }
+});
+
+charts.area = new Chart(document.getElementById("areaChart"), {
+    type:"line",
+    data:{
+        labels:["Mon","Tue","Wed","Thu","Fri"],
+        datasets:[{data:[85,88,90,91,92], fill:true}]
+    }
+});
+
+}
+
+function updateData(){
+    alert("Filter applied (connect backend later)");
+}
+
+window.onload = initCharts;
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="profile-layout">
+
+<!-- LEFT SIDE -->
+<div class="left">
+
+    <div class="card profile-card">
+        <img class="profile-img"
+        src="{{ url_for('static', filename='images/yourphoto.jpg') }}">
+
+        <h2>Shaksham Pandey</h2>
+        <p class="role">AI Developer</p>
+
+        <p class="bio">
+            Building AI systems for industrial safety and real-time analytics.
+        </p>
+
+        <button class="primary">Edit Profile</button>
+    </div>
+
+    <div class="card small-card">
+        <h4>📊 Stats</h4>
+        <p>Projects: 2</p>
+        <p>Technologies: 4</p>
+        <p>Performance: 99%</p>
+    </div>
+
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="right">
+
+<!-- ABOUT -->
+<div class="card">
+<h3>About</h3>
+<p>
+I specialize in AI-based safety systems, real-time monitoring,
+and predictive analytics solutions.
+</p>
+</div>
+
+<br>
+
+<!-- SKILLS -->
+<div class="card">
+
+<h3>Skills</h3>
+
+<div class="skill">Python</div>
+<div class="bar"><div style="width:95%"></div></div>
+
+<div class="skill">Machine Learning</div>
+<div class="bar"><div style="width:90%"></div></div>
+
+<div class="skill">Flask</div>
+<div class="bar"><div style="width:85%"></div></div>
+
+<div class="skill">AI Systems</div>
+<div class="bar"><div style="width:92%"></div></div>
+
+</div>
+
+<br>
+
+<!-- PROJECT -->
+<div class="card">
+
+<h3>Featured Project</h3>
+
+<h2>SafeSense AI</h2>
+
+<p class="desc">
+AI-powered system for monitoring, detecting, and preventing industrial hazards.
+</p>
+
+<div class="grid">
+    <div class="mini">📡 Monitoring</div>
+    <div class="mini">📊 Analytics</div>
+    <div class="mini">⚠ Risk Detection</div>
+    <div class="mini">🚨 Alerts</div>
+</div>
+
+</div>
+
+<br>
+
+<!-- TEAM (PRO STRUCTURE) -->
+<div class="card">
+
+<h3>👥 Team</h3>
+
+<div class="team-list">
+
+<!-- MEMBER 1 -->
+<div class="team-row">
+
+    <div class="team-left">
+        <img src="{{ url_for('static', filename='images/team1.jpg') }}">
+        <h4>Shakshat Pandey</h4>
+        <p class="role-text">Frontend Developer</p>
+
+        <div class="social">
+            <a href="#">💼</a>
+            <a href="#">🐙</a>
+        </div>
+    </div>
+
+    <div class="team-right">
+        <p class="desc">
+            Builds modern UI and ensures smooth user experience across platforms.
+        </p>
+
+        <div class="tags">
+            <span>React</span>
+            <span>UI/UX</span>
+            <span>Design</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- MEMBER 2 -->
+<div class="team-row">
+
+    <div class="team-left">
+        <img src="{{ url_for('static', filename='images/team2.jpg') }}">
+        <h4>Aryan Sinha</h4>
+        <p class="role-text">Backend Developer</p>
+
+        <div class="social">
+            <a href="#">💼</a>
+            <a href="#">🐙</a>
+        </div>
+    </div>
+
+    <div class="team-right">
+        <p class="desc">
+            Handles backend architecture, APIs, and system scalability.
+        </p>
+
+        <div class="tags">
+            <span>Flask</span>
+            <span>API</span>
+            <span>Database</span>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+<style>
+
+/* LAYOUT */
+.profile-layout {
+    display:flex;
+    gap:20px;
+}
+
+.left {
+    width:280px;
+}
+
+.right {
+    flex:1;
+}
+
+/* PROFILE */
+.profile-card {
+    text-align:center;
+}
+
+.profile-img {
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+/* TEXT */
+.role {
+    color:#2563eb;
+}
+
+.bio {
+    font-size:14px;
+    color:#555;
+}
+
+/* BUTTON */
+.primary {
+    margin-top:10px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:8px;
+    border-radius:6px;
+}
+
+/* SKILLS */
+.skill {
+    margin-top:10px;
+}
+
+.bar {
+    height:6px;
+    background:#e5e7eb;
+    border-radius:5px;
+}
+
+.bar div {
+    height:100%;
+    background:#2563eb;
+}
+
+/* MINI */
+.mini {
+    background:#eef2ff;
+    padding:8px;
+    border-radius:6px;
+    text-align:center;
+}
+
+/* TEAM */
+.team-list {
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.team-row {
+    display:flex;
+    gap:20px;
+    padding:15px;
+    border-radius:12px;
+    background:#f9fafb;
+}
+
+.team-left {
+    width:200px;
+    text-align:center;
+}
+
+.team-left img {
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.role-text {
+    color:#2563eb;
+    font-weight:600;
+}
+
+.team-right {
+    flex:1;
+}
+
+.desc {
+    color:#555;
+}
+
+.tags span {
+    background:#eef2ff;
+    padding:5px 10px;
+    border-radius:6px;
+    margin-right:5px;
+    font-size:13px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .profile-layout {
+        flex-direction:column;
+    }
+    .left {
+        width:100%;
+    }
+    .team-row {
+        flex-direction:column;
+        text-align:center;
+    }
+}
+
+</style>
+
+{% endblock %}

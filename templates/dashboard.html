@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>SafeSense</h2>
+
+    <a href="/">🏠 Home</a>
+    <a href="/dashboard" class="active">📊 Dashboard</a>
+    <a href="/products">🛍 Products</a>
+    <a href="/profile">👤 Profile</a>
+    <a href="/contact">📞 Contact</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+<h1>Dashboard</h1>
+
+<!-- KPI CARDS -->
+<div class="kpi-grid">
+
+<div class="kpi-card">
+    <p>Temperature</p>
+    <h2 id="temp">--</h2>
+</div>
+
+<div class="kpi-card">
+    <p>Violations</p>
+    <h2 id="violations">--</h2>
+</div>
+
+<div class="kpi-card">
+    <p>Risk Level</p>
+    <h2 id="risk">--</h2>
+</div>
+
+</div>
+
+<br>
+
+<!-- CHARTS -->
+<div class="chart-grid">
+
+<div class="chart-card">
+    <h3>Temperature Trend</h3>
+    <canvas id="lineChart"></canvas>
+</div>
+
+<div class="chart-card">
+    <h3>Violations</h3>
+    <canvas id="barChart"></canvas>
+</div>
+
+</div>
+
+<br>
+
+<!-- AI PANEL -->
+<div class="insight-card">
+    <h3>AI Insight</h3>
+    <p id="analysis">Analyzing...</p>
+</div>
+
+</div>
+</div>
+
+<!-- CSS -->
+<style>
+
+/* LAYOUT */
+.layout {
+    display:flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width:220px;
+    background:#0f172a;
+    color:white;
+    height:100vh;
+    padding:20px;
+}
+
+.sidebar h2 {
+    margin-bottom:20px;
+}
+
+.sidebar a {
+    display:block;
+    padding:10px;
+    margin:5px 0;
+    color:#cbd5e1;
+    text-decoration:none;
+    border-radius:6px;
+}
+
+.sidebar a:hover,
+.sidebar .active {
+    background:#2563eb;
+    color:white;
+}
+
+/* MAIN */
+.main {
+    flex:1;
+    padding:30px;
+    background:#f8fafc;
+}
+
+/* KPI GRID */
+.kpi-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+.kpi-card {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* CHART GRID */
+.chart-grid {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:20px;
+}
+
+.chart-card {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+}
+
+/* INSIGHT */
+.insight-card {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .layout {
+        flex-direction:column;
+    }
+    .sidebar {
+        width:100%;
+        height:auto;
+    }
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+let lineChart, barChart;
+
+function initCharts(){
+
+    lineChart = new Chart(document.getElementById("lineChart"), {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+                label: "Temperature",
+                data: []
+            }]
+        }
+    });
+
+    barChart = new Chart(document.getElementById("barChart"), {
+        type: "bar",
+        data: {
+            labels: ["Violations"],
+            datasets: [{
+                data: [0]
+            }]
+        }
+    });
+}
+
+function loadData(){
+
+fetch("/data")
+.then(res=>res.json())
+.then(data=>{
+
+    temp.innerText = data.temp;
+    violations.innerText = data.violations;
+    risk.innerText = data.risk;
+
+    analysis.innerText = data.risk==="HIGH"
+        ? "⚠ High risk detected"
+        : data.risk==="MEDIUM"
+        ? "⚠ Monitor system"
+        : "✅ System stable";
+
+    lineChart.data.labels.push("");
+    lineChart.data.datasets[0].data.push(data.temp);
+
+    if(lineChart.data.labels.length > 10){
+        lineChart.data.labels.shift();
+        lineChart.data.datasets[0].data.shift();
+    }
+
+    lineChart.update();
+
+    barChart.data.datasets[0].data = [data.violations];
+    barChart.update();
+
+});
+}
+
+window.onload = ()=>{
+    initCharts();
+    loadData();
+    setInterval(loadData,3000);
+};
+
+</script>
+
+{% endblock %}

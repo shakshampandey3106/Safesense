@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SafeSense AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<meta name="theme-color" content="#2563eb">
+<style>
+
+/* RESET */
+body {
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background:#f8fafc;
+}
+
+/* NAVBAR */
+.navbar {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    background:white;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* LOGO */
+.logo {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:18px;
+    font-weight:600;
+}
+
+.logo img {
+    width:34px;
+    height:34px;
+    object-fit:contain;
+}
+
+/* OPTIONAL GRADIENT TEXT */
+.logo span {
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* NAV LINKS */
+.nav-links {
+    display:flex;
+    align-items:center;
+}
+
+.nav-links a {
+    margin-left:20px;
+    text-decoration:none;
+    color:#555;
+    font-size:15px;
+    transition:0.2s;
+}
+
+/* HOVER */
+.nav-links a:hover {
+    color:#2563eb;
+}
+
+/* ACTIVE LINK */
+.nav-links a.active {
+    color:#2563eb;
+    font-weight:600;
+}
+
+/* MAIN CONTENT */
+.main {
+    padding:30px 40px;
+}
+
+/* CARD */
+.card {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* GRID */
+.grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+/* BUTTON */
+button {
+    padding:8px 14px;
+    border:none;
+    border-radius:6px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover {
+    background:#1e40af;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .navbar {
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .nav-links a {
+        margin:10px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+
+    <!-- LOGO -->
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}">
+        <span>SafeSense</span>
+    </div>
+
+    <!-- NAV LINKS -->
+    <div class="nav-links">
+    <a href="/" class="{% if request.path=='/' %}active{% endif %}">Home</a>
+    <a href="/dashboard" class="{% if request.path=='/dashboard' %}active{% endif %}">Dashboard</a>
+    <a href="/products" class="{% if request.path=='/products' %}active{% endif %}">Products</a>
+    <a href="/analytics" class="{% if request.path=='/analytics' %}active{% endif %}">Analytics</a>
+    <a href="/profile" class="{% if request.path=='/profile' %}active{% endif %}">Profile</a>
+    <a href="/contact" class="{% if request.path=='/contact' %}active{% endif %}">Contact</a>
+</div>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+    {% block content %}{% endblock %}
+</div>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/static/sw.js");
+}
+</script>
+</body>
+</html>
