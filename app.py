@@ -1,35 +1,55 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # IMPORTANT for Flutter web/mobile
+CORS(app)
 
 ##################################################
-# HOME ROUTE (for browser)
+# READ DATA FROM AI FILE
+##################################################
+
+def read_data():
+    try:
+        with open("data.txt", "r") as f:
+            temp, violations, risk = f.read().split(",")
+
+            return {
+                "temp": int(temp),
+                "violations": int(violations),
+                "risk": risk,
+                "alerts": int(violations)
+            }
+
+    except:
+        return {
+            "temp": 0,
+            "violations": 0,
+            "risk": "LOW",
+            "alerts": 0
+        }
+
+##################################################
+# HOME ROUTE
 ##################################################
 
 @app.route("/")
 def home():
-    return "SafeSense API is running 🚀"
+    return "SafeSense API Running 🚀"
 
 ##################################################
 # DASHBOARD API
 ##################################################
 
 @app.route("/api/data")
-def get_data():
-    return jsonify({
-        "temp": 55,
-        "risk": "LOW",
-        "alerts": 12
-    })
+def data():
+    return jsonify(read_data())
 
 ##################################################
-# PRODUCTS API
+# PRODUCTS API (4 PRODUCTS)
 ##################################################
 
 @app.route("/api/products")
-def get_products():
+def products():
     return jsonify([
         {
             "name": "Temperature Sensor",
@@ -54,7 +74,7 @@ def get_products():
     ])
 
 ##################################################
-# RUN APP
+# RUN SERVER
 ##################################################
 
 if __name__ == "__main__":
